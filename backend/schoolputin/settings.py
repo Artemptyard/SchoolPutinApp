@@ -37,10 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'rest_framework_swagger',
+    'phonenumber_field',
+    
     'gradebook.apps.GradeBookConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'tasks.apps.TasksConfig',
+    'materials.apps.MaterialsConfig',
+    'classes.apps.ClassesConfig',
+    'schedule.apps.ScheduleConfig',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
