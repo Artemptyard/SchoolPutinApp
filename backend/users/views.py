@@ -24,7 +24,7 @@ class StudentList(rfg.ListAPIView):
 class UserCreator(rfg.CreateAPIView):
     """Создание пользователя
 
-    Создаётся запись в таблицах User.
+    Создаётся запись в таблицах User и таблице, согласно указанной роли.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
