@@ -2,20 +2,21 @@ from django.db import models
 from users.models import Student, Teacher
 
 # Create your models here.
-class Group(models.Model):
-    name = models.CharField(max_length=50)
-    students = models.ManyToManyField(Student, related_name='groups')
-
-    def __str__(self):
-        return self.name
-
-
 class Subject(models.Model):
     LEVELS = [('low', 'Подготовительный'), ('medium', 'ОГЭ'), ('hign', 'ЕГЭ')]
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=300, blank=True)
     level = models.CharField(choices=LEVELS, max_length=20)
     teachers = models.ManyToManyField(Teacher, related_name='subjects')
+
+    def __str__(self):
+        return self.name
+
+
+class Group(models.Model):
+    name = models.CharField(max_length=50)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    students = models.ManyToManyField(Student, related_name='groups')
 
     def __str__(self):
         return self.name
