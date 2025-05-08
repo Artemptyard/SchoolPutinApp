@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Material
 
-class LearningMaterialSerializer(serializers.ModelSerializer):
+class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LearningMaterial
+        model = Material
         fields = '__all__'

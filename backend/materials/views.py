@@ -1,13 +1,16 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-from .models import Material, Student, Teacher
-from .serializers import MaterialSerializer
+from .models import Material
+from users.models import Student, Teacher
+from .serializer import MaterialSerializer
 
 
 # Create your views here.
 class MaterialListView(generics.ListAPIView):
-    """Ученик просматривает материалы по своим предметам"""
+    """Получение доступных материалов
+
+    Ученик просматривает материалы по своим предметам"""
     serializer_class = MaterialSerializer
     permission_classes = [IsAuthenticated]
 

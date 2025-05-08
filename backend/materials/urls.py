@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import LearningMaterialListView, LearningMaterialCreateView, LearningMaterialUpdateView, LearningMaterialDeleteView
+from .views import MaterialListView, MaterialCreateView, MaterialUpdateView, MaterialDeleteView
 
 urlpatterns = [
-    path('materials/', LearningMaterialListView.as_view(), name='material-list'),
-    path('materials/create/', LearningMaterialCreateView.as_view(), name='material-create'),
-    path('materials/<int:pk>/edit/', LearningMaterialUpdateView.as_view(), name='material-update'),
-    path('materials/<int:pk>/delete/', LearningMaterialDeleteView.as_view(), name='material-delete'),
+    path('materials/', MaterialListView.as_view(), name='material-list'),
+    path('create-materials/', MaterialCreateView.as_view(), name='material-create'),
+    path('update-materials/<int:pk>/', MaterialUpdateView.as_view(), name='material-update'),
+    path('delete-materials/<int:pk>/', MaterialDeleteView.as_view(), name='material-delete'),
 ]
