@@ -9,6 +9,8 @@ def create_profile_for_user(sender, instance, created, **kwargs):
         if instance.role == 'student':
             Student.objects.create(user=instance)
         elif instance.role == 'teacher':
+            instance.is_staff = True
+            instance.save()
             Teacher.objects.create(user=instance)
         elif instance.role == 'parent':
             Parent.objects.create(user=instance)
