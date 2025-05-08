@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics as rfg
+from rest_framework.permissions import IsAuthenticated, BasePermission
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -21,6 +23,11 @@ class StudentList(rfg.ListAPIView):
     serializer_class = StudentSerializer
 
 
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_superuser
+
+
 class UserCreator(rfg.CreateAPIView):
     """Создание пользователя
 
@@ -28,6 +35,10 @@ class UserCreator(rfg.CreateAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 class UserManager(rfg.RetrieveUpdateDestroyAPIView):
@@ -43,6 +54,7 @@ class StudentCreater(rfg.CreateAPIView):
     """
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 class StudentManager(rfg.RetrieveUpdateAPIView):
