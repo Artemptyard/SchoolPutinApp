@@ -19,9 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         Добавление пароля username + year
         """
         validated_data["password"] = validated_data["username"] + str(dt.now().year)
-        print(validated_data["password"])
         user = User.objects.create_user(**validated_data)
-        print(user.password)
         return user
 
 
