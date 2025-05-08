@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.contrib.auth import logout, login
-from django.shortcuts import redirect
+from django.contrib.auth import logout, login, authenticate
+from django.shortcuts import redirect, render
 from django.views import View
 
 from rest_framework import permissions
@@ -45,9 +45,28 @@ class CustomLogoutView(View):
         return redirect(next_url)
 
 
+
+
+class CustomLoginView(View):
+    def get(self, request):
+        return render(request, 'login.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            next_url = request.GET.get('next', '/api/swagger/')
+            return redirect(next_url)
+        return render(request, 'login.html', {'error': 'Неверный логин или пароль'})
+
+
 urlpatterns = [
     path('accounts/logout/', CustomLogoutView.as_view(), name='logout'),
     path('admin/logout/', CustomLogoutView.as_view(), name='logout'),
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
+    path('admin/login/', CustomLoginView.as_view(), name='login'),
     path('admin', admin.site.urls),
     path("api/users/", include("users.urls")),
     path("api/schedule/", include("schedule.urls")),
