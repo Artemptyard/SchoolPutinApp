@@ -16,13 +16,15 @@ class MaterialListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        # if not hasattr(user, 'student'):
-        #     raise PermissionDenied("Только ученики могут просматривать материалы.")
-        student = user.student
-        subjects = set()
-        for group in student.groups.all():
-            subjects.update(group.subjects.all())
-        return Material.objects.filter(subject__in=subjects)
+        if hasattr(user, 'student'):
+            student = user.student
+            subjects = set()
+            for group in student.groups.all():
+                subjects.update(group.subjects.all())
+            materials = Material.objects.filter(subject__in=subjects)
+        else:
+            materials = Material.objects.all()
+        return materials
 
 
 class MaterialCreateView(generics.CreateAPIView):
