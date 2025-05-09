@@ -15,7 +15,8 @@ from drf_yasg import openapi
 
 from .models import User, Student, Parent, Teacher
 from schedule.models import Group, Subject
-from .serializer import UserSerializer, StudentSerializer, ParentSerializer, TeacherSerializer
+from .serializer import UserSerializer, StudentSerializer, ParentSerializer, TeacherSerializer, StudentsGroupsSerializer
+from schedule.serializers import SubjectSerializer
 
 
 class StudentList(rfg.ListAPIView):
@@ -151,7 +152,7 @@ class SubjectsManager(APIView):
     """Управление связью между преподавателем и его предметами"""
     permission_classes = [IsAdminUser]
 
-    @swagger_auto_schema(request_body=None, responses={201: ParentSerializer})
+    @swagger_auto_schema(request_body=None, responses={201: TeacherSerializer})
     def post(self, request: WSGIRequest, teacher_id: int, subject_id: int, format=None):
         """Добавление предмета преподавателю"""
         teacher: Teacher = get_object_or_404(Teacher, id=teacher_id)
@@ -160,31 +161,11 @@ class SubjectsManager(APIView):
         teacher.save()
         return Response(TeacherSerializer(teacher).data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(request_body=None, responses={200: ParentSerializer})
+    @swagger_auto_schema(request_body=None, responses={200: TeacherSerializer})
     def delete(self, request: WSGIRequest, student_id: int, parent_id: int, format=None):
-        """Удаление связи между родителем и ребёнком"""
+        """Удаление предмета у преподавателя"""
         teacher: Teacher = get_object_or_404(Teacher, id=teacher_id)
         subject: Subject = get_object_or_404(Subject, id=subject_id)
         teacher.subjects.remove(subject)
         teacher.save()
         return Response(TeacherSerializer(teacher).data, status=status.HTTP_201_CREATED)
-
-
-@swagger_auto_schema(method='get', request_body=None, responses={200: StudentSerializer(many=True)})
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_children(request: WSGIRequest, parent_id: int):
-    """Получение детей родителя"""
-    parent = get_object_or_404(Parent, id=parent_id)
-    students = parent.students.all()
-    return Response(StudentSerializer(students, many=True).data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(method='get', request_body=None, responses={200: ParentSerializer(many=True)})
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_parents(request: WSGIRequest, student_id: int):
-    """Получение родителей ребёнка"""
-    student = get_object_or_404(Student, id=student_id)
-    parents = student.parents.all()
-    return Response(ParentSerializer(parents, many=True).data, status=status.HTTP_200_OK)

@@ -16,8 +16,8 @@ class MaterialListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if not hasattr(user, 'student'):
-            raise PermissionDenied("Только ученики могут просматривать материалы.")
+        # if not hasattr(user, 'student'):
+        #     raise PermissionDenied("Только ученики могут просматривать материалы.")
         student = user.student
         subjects = set()
         for group in student.groups.all():

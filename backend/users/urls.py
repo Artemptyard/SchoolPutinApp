@@ -18,6 +18,4 @@ urlpatterns = [
     path("get_parents/<int:student_id>", get_parents),
 
     path("manage_subjects/<int:teacher_id>/<int:subject_id>", SubjectsManager.as_view()),
-    # path("get_children/<int:parent_id>", get_children),
-    # path("get_parents/<int:student_id>", get_parents),
 ]
