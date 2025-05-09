@@ -15,7 +15,7 @@ from drf_yasg import openapi
 
 from .models import User, Student, Parent, Teacher
 from schedule.models import Group, Subject
-from .serializer import UserSerializer, StudentSerializer, ParentSerializer, TeacherSerializer, StudentsGroupsSerializer
+from .serializer import UserSerializer, StudentSerializer, ParentSerializer, TeacherSerializer
 from schedule.serializers import SubjectSerializer
 
 
