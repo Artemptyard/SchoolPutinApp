@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .models import User, Student, Parent, Teacher
-from schedule.models import Group
+from schedule.models import Group, Subject
 from .serializer import UserSerializer, StudentSerializer, ParentSerializer, TeacherSerializer
 
 
@@ -125,6 +125,49 @@ class KinshipManager(APIView):
         parent.students.remove(student)
         parent.save()
         return Response(ParentSerializer(parent).data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(method='get', request_body=None, responses={200: StudentSerializer(many=True)})
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_children(request: WSGIRequest, parent_id: int):
+    """Получение детей родителя"""
+    parent = get_object_or_404(Parent, id=parent_id)
+    students = parent.students.all()
+    return Response(StudentSerializer(students, many=True).data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(method='get', request_body=None, responses={200: ParentSerializer(many=True)})
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_parents(request: WSGIRequest, student_id: int):
+    """Получение родителей ребёнка"""
+    student = get_object_or_404(Student, id=student_id)
+    parents = student.parents.all()
+    return Response(ParentSerializer(parents, many=True).data, status=status.HTTP_200_OK)
+
+
+class SubjectsManager(APIView):
+    """Управление связью между преподавателем и его предметами"""
+    permission_classes = [IsAdminUser]
+
+    @swagger_auto_schema(request_body=None, responses={201: ParentSerializer})
+    def post(self, request: WSGIRequest, teacher_id: int, subject_id: int, format=None):
+        """Добавление предмета преподавателю"""
+        teacher: Teacher = get_object_or_404(Teacher, id=teacher_id)
+        subject: Subject = get_object_or_404(Subject, id=subject_id)
+        teacher.subjects.add(subject)
+        teacher.save()
+        return Response(TeacherSerializer(teacher).data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(request_body=None, responses={200: ParentSerializer})
+    def delete(self, request: WSGIRequest, student_id: int, parent_id: int, format=None):
+        """Удаление связи между родителем и ребёнком"""
+        teacher: Teacher = get_object_or_404(Teacher, id=teacher_id)
+        subject: Subject = get_object_or_404(Subject, id=subject_id)
+        teacher.subjects.remove(subject)
+        teacher.save()
+        return Response(TeacherSerializer(teacher).data, status=status.HTTP_201_CREATED)
 
 
 @swagger_auto_schema(method='get', request_body=None, responses={200: StudentSerializer(many=True)})

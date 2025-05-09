@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from schedule.models import Subject
 
 from rest_framework import serializers
 from .models import User, Student, Teacher, Parent
@@ -54,6 +55,21 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ['id', 'user']
+
+
+class TeachersSubjectsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ['id', 'name']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    subjects = TeachersSubjectsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Teacher
+        fields = ['id', 'user', 'subjects']
+
 
 
 class ParentSerializer(serializers.ModelSerializer):

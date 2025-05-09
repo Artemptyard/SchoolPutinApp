@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Schedule, Subject, Group
+from users.models import Teacher
 
 
 class ScheduleSerializer(serializers.ModelSerializer):

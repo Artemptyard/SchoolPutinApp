@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import UserCreator, UserManager, StudentCreater, StudentManager, KinshipManager, StudentList, \
-    TeacherManager, ParentManager, get_parents, get_children
+    TeacherManager, ParentManager, get_parents, get_children, SubjectsManager
 
 urlpatterns = [
     path("create_user/", UserCreator.as_view()),
@@ -16,4 +16,8 @@ urlpatterns = [
     path("manage_kinship/<int:student_id>/<int:parent_id>", KinshipManager.as_view()),
     path("get_children/<int:parent_id>", get_children),
     path("get_parents/<int:student_id>", get_parents),
+
+    path("manage_subjects/<int:teacher_id>/<int:subject_id>", SubjectsManager.as_view()),
+    # path("get_children/<int:parent_id>", get_children),
+    # path("get_parents/<int:student_id>", get_parents),
 ]
