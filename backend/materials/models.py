@@ -6,7 +6,7 @@ from users.models import Teacher
 class Material(models.Model):
     title = models.CharField("Название материала", max_length=200)
     description = models.TextField("Описание", blank=True)
-    file = models.FileField("Файл", upload_to="materials/")
+    file = models.FileField("Файл", upload_to="materials/", blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
 
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='materials')
