@@ -19,6 +19,8 @@ from django.urls import path, include, re_path
 from django.contrib.auth import logout, login, authenticate
 from django.shortcuts import redirect, render
 from django.views import View
+from django.conf import settings
+from django.conf.urls.static import static
 
 from rest_framework import permissions
 
@@ -77,4 +79,4 @@ urlpatterns = [
     re_path(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^api/docs/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path(r'^swagger\.json$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

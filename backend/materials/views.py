@@ -4,7 +4,9 @@ from rest_framework.exceptions import PermissionDenied
 from .models import Material
 from users.models import Student, Teacher
 from .serializer import MaterialSerializer
-
+import os
+from django.conf import settings
+from django.http import FileResponse, Http404
 
 # Create your views here.
 class MaterialListView(generics.ListAPIView):
@@ -70,3 +72,13 @@ class MaterialDeleteView(generics.DestroyAPIView):
         if not (user.is_staff or getattr(user, 'teacher', None) == instance.teacher):
             raise PermissionDenied("Вы не можете удалить этот материал.")
         instance.delete()
+
+
+def download_material(request, pk):
+    """Скачивания файла с материалами"""
+    try:
+        material = Material.objects.get(pk=pk)
+        file_path = material.file.path
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=os.path.basename(file_path))
+    except LearningMaterial.DoesNotExist:
+        raise Http404("Файл не найден")
